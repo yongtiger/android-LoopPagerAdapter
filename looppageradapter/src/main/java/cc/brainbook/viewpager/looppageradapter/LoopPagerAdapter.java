@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import static cc.brainbook.viewpager.looppageradapter.BuildConfig.DEBUG;
+
 /**
  * The seamless infinite loop pager adapter class that extends {@link PagerAdapter}.
  *
@@ -24,7 +26,6 @@ import java.util.List;
  */
 public class LoopPagerAdapter extends PagerAdapter {
     private static final String TAG = "LoopPagerAdapter";
-    private static final boolean DEBUG = false;
 
     /**
      * The {@link List} data used by LoopPagerAdapter.
