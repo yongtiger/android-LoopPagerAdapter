@@ -1,4 +1,4 @@
-package cc.brainbook.viewpager.looppageradapter;
+package cc.brainbook.viewpager.looppageradapter.app;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import cc.brainbook.viewpager.looppageradapter.LoopPagerAdapter;
+import cc.brainbook.viewpager.looppageradapter.ViewHolderCreator;
 import cc.brainbook.viewpager.transformer.CommonTransformer;
 
 public class MainActivity extends AppCompatActivity {

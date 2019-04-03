@@ -1,7 +1,9 @@
-package cc.brainbook.viewpager.looppageradapter;
+package cc.brainbook.viewpager.looppageradapter.app;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
+
+import cc.brainbook.viewpager.looppageradapter.ViewHolder;
 
 /**
  * The local {@link AppCompatImageView} view holder that implements {@link ViewHolder}.

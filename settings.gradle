@@ -1,1 +1,1 @@
-include ':app', ':looppageradapter'
+include ':looppageradapter', ':app'
