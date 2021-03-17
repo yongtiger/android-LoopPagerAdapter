@@ -4,14 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.lang.reflect.Field;
 import java.util.List;
-
-import static cc.brainbook.viewpager.looppageradapter.BuildConfig.DEBUG;
 
 /**
  * The seamless infinite loop pager adapter class that extends {@link PagerAdapter}.
@@ -24,18 +21,16 @@ import static cc.brainbook.viewpager.looppageradapter.BuildConfig.DEBUG;
  * @website www.brainbook.cc
  * @time 2016/4/8 14:07
  */
-public class LoopPagerAdapter extends PagerAdapter {
-    private static final String TAG = "LoopPagerAdapter";
-
+public class LoopPagerAdapter<T> extends PagerAdapter {
     /**
      * The {@link List} data used by LoopPagerAdapter.
      */
-    private List mData;
+    private final List<T> mData;
 
     /**
      * The {@link ViewHolder} creator used by LoopPagerAdapter.
      */
-    private ViewHolderCreator mViewHolderCreator;
+    private final ViewHolderCreator<T> mViewHolderCreator;
 
     /**
      * The static final factor multiplied by {@link #getRealCount()}.
@@ -72,7 +67,7 @@ public class LoopPagerAdapter extends PagerAdapter {
      * @param holderCreator The {@link ViewHolder} creator .
      * @param data The {@link List} data.
      */
-    public LoopPagerAdapter(ViewHolderCreator holderCreator, List data) {
+    public LoopPagerAdapter(ViewHolderCreator<T> holderCreator, List<T> data) {
         this.mData = data;
         this.mViewHolderCreator = holderCreator;
     }
@@ -81,7 +76,7 @@ public class LoopPagerAdapter extends PagerAdapter {
      * Interface definition for a callback to be invoked when a view pager is starting update.
      */
     public interface OnStartUpdateListener {
-        void onStartUpdate(@NonNull ViewGroup container, int updatePosition, int updateCount);
+        void onStartUpdate(ViewGroup container, int updatePosition, int updateCount);
     }
 
     /**
@@ -128,16 +123,15 @@ public class LoopPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;///https://developer.android.com/reference/android/support/v4/view/PagerAdapter.html
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        if (DEBUG) Log.i(TAG, "instantiateItem: addView: position: " + position);
+    @NonNull
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         if(0 == getRealCount()) return null;///Note: deal with `divide by 0` error occurs when the number of pages is 0.
         final int realPosition = position % getRealCount();
-        if (DEBUG) Log.i(TAG, "instantiateItem: addView: realPosition: " + realPosition);
 
         final View view = getView(container, realPosition);
         container.addView(view);
@@ -145,8 +139,7 @@ public class LoopPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        if (DEBUG) Log.i(TAG, "destroyItem: position: " + position);
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
     }
 
@@ -159,14 +152,12 @@ public class LoopPagerAdapter extends PagerAdapter {
     @Override
     public void startUpdate(@NonNull ViewGroup container) {
         final int position = ((ViewPager)container).getCurrentItem();
-        if (DEBUG) Log.i(TAG, "startUpdate: position: " + position);
 
         ///Solve the issue of not being right-slip.
         ///Solve the issue of left-slip out of bounds without using Integer.MAX_VALUE.
         if(mCanLoop && (position < getRealCount() || position >= getCount() - getRealCount())){
             if(0 == getRealCount()) return;///Note: deal with `divide by 0` error occurs when the number of pages is 0.
             final int realPosition = position % getRealCount() + getRealCount();
-            if (DEBUG) Log.i(TAG, "startUpdate: realPosition: " + realPosition);
 
             ///Solved bug: the transformer appear blank page.
             try {
@@ -207,7 +198,7 @@ public class LoopPagerAdapter extends PagerAdapter {
      * @return Returns a View representing the new page.
      */
     private View getView(@NonNull ViewGroup container, int position){
-        final ViewHolder holder = (ViewHolder) mViewHolderCreator.createViewHolder();
+        final ViewHolder<T> holder = (ViewHolder<T>) mViewHolderCreator.createViewHolder();
         if(null == holder){
             throw new RuntimeException("Could not return a null holder");
         }

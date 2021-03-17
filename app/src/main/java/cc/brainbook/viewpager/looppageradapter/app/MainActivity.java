@@ -23,9 +23,10 @@ public class MainActivity extends AppCompatActivity {
         ///test: local images and LocalImageHolderView
         ArrayList<Integer> localImages = new ArrayList<>();
         for (int position = 0; position < 5; position++) {  ///test: page numbers is 0, 1, 2,...5 or more
-            localImages.add(getResId("ic_test_" + position, R.drawable.class));
+//            localImages.add(getResId("ic_test_" + position, R.drawable.class));
+            localImages.add(getResources().getIdentifier("ic_test_" + position, "drawable", getPackageName()));
         }
-        LoopPagerAdapter adapter = new LoopPagerAdapter(new ViewHolderCreator() {
+        LoopPagerAdapter<Integer> adapter = new LoopPagerAdapter<Integer>(new ViewHolderCreator() {
             @Override
             public LocalImageViewHolder createViewHolder() {
                 return new LocalImageViewHolder();
